@@ -1,0 +1,110 @@
+package com.chat.controllers;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.chat.exceptions.ChannelException;
+import com.chat.exceptions.CommunityException;
+import com.chat.exceptions.UserException;
+import com.chat.models.Channel;
+import com.chat.models.Community;
+import com.chat.models.Message;
+import com.chat.models.User;
+import com.chat.services.ChannelService;
+import com.chat.services.CommuntiyService;
+import com.chat.services.MessageService;
+import com.chat.services.UserService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/chat")
+public class Controller {
+
+	@Autowired 
+	private UserService userService;
+	
+	@Autowired 
+	private ChannelService chService;
+	
+	@Autowired 
+	private CommuntiyService comService;
+	
+	@Autowired 
+	private MessageService msgService;
+	
+	@PostMapping("/user")
+	public ResponseEntity<User> registerUser(@Valid @RequestBody User user)throws UserException {
+		User saveUser = userService.createUser(user);
+		return new ResponseEntity<User>(saveUser, HttpStatus.CREATED);
+		
+	}
+	
+	@GetMapping("/users")
+	public ResponseEntity<List<User>> getAllUser(@RequestParam String key) throws UserException{
+		
+		List<User> viewAll= userService.getAllUser(key);
+		return new ResponseEntity<List<User>>(viewAll, HttpStatus.OK);
+	}
+
+	@PostMapping("/community")
+	public ResponseEntity<Community> registerCommunity(@Valid @RequestBody Community community, @RequestParam String key)throws CommunityException {
+		Community saveCommunity = comService.createCommunity(community, key);
+		return new ResponseEntity<Community>(saveCommunity, HttpStatus.CREATED);
+		
+	}
+	
+	@GetMapping("/communities")
+	public ResponseEntity<List<Community>> getAllCommunity() throws CommunityException{
+		
+		List<Community> viewAll= comService.getAllCommunities();
+		return new ResponseEntity<List<Community>>(viewAll, HttpStatus.OK);
+	}
+	
+	@PostMapping("/channel")
+	public ResponseEntity<Channel> registerChannel(@Valid @RequestBody Channel channel)throws ChannelException {
+		Channel saveChannel = chService.createChannel(channel);
+		return new ResponseEntity<Channel>(saveChannel, HttpStatus.CREATED);
+		
+	}
+	
+	@GetMapping("/Channels")
+	public ResponseEntity<List<Channel>> getAllChannel() throws ChannelException{
+		
+		List<Channel> viewAll= chService.getAllChannel();
+		return new ResponseEntity<List<Channel>>(viewAll, HttpStatus.OK);
+	}
+	
+	@PostMapping("channel/adduser/{chId}/{userId}")
+	public ResponseEntity<String> addUserToChannel(@PathVariable("chId") Integer chId, @PathVariable("userId") Integer userId)throws ChannelException,UserException {
+		String msg = chService.addUserToChannel(chId, userId);
+		return new ResponseEntity<String>(msg, HttpStatus.CREATED);
+		
+	}
+	
+	@PostMapping("/message")
+	public ResponseEntity<String> sendMessage(@Valid @RequestBody Message msg) {
+		String savemsg = msgService.sendMessage(msg);
+		return new ResponseEntity<String>(savemsg, HttpStatus.CREATED);
+		
+	}
+	
+	@GetMapping("/messages/{chId}")
+	public ResponseEntity<List<Message>> getAllMessagesByChannelId(@PathVariable("chId") Integer id){
+		
+		List<Message> viewAll= msgService.getAllMessagesByChannelId(id);
+		return new ResponseEntity<List<Message>>(viewAll, HttpStatus.OK);
+	}
+
+}
+

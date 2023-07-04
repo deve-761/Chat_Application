@@ -1,0 +1,64 @@
+package com.chat.services;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.chat.dto.LoginDTO;
+import com.chat.exceptions.LoginException;
+import com.chat.models.CurrentUserSession;
+import com.chat.models.User;
+import com.chat.repositories.SessionRepo;
+import com.chat.repositories.UserRepo;
+
+@Service
+public class LoginServiceImpl implements LoginService{
+
+	@Autowired
+	private UserRepo userRepo;
+	
+	@Autowired
+	private SessionRepo sRepo;
+	
+	
+	
+	@Override
+	public String logIntoAccount(LoginDTO dto)throws LoginException{
+		
+		User existingUser = userRepo.findByUserName(dto.getUsername());
+		if(existingUser == null) {
+			throw new LoginException("Please Enter a valid user name");
+		}	
+		Optional<CurrentUserSession> validCustomerSessionOpt =  sRepo.findById(existingUser.getId());
+
+		if(validCustomerSessionOpt.isPresent()) {
+			throw new LoginException("User already Logged In with this number");
+		}
+		
+		if(existingUser.getPassword().equals(dto.getPassword())) {
+			
+			String key= UUID.randomUUID().toString();
+			CurrentUserSession currentUserSession = new CurrentUserSession(existingUser.getId(),key,LocalDateTime.now());
+			sRepo.save(currentUserSession);
+			return currentUserSession.toString();
+		}
+		else
+			throw new LoginException("Please Enter a valid password");
+	}
+
+	
+	 @Override
+	 public String logOutFromAccount(String key)throws LoginException {
+		 CurrentUserSession us =  sRepo.findByUuid(key);
+	 	if(us != null) {
+	 		sRepo.delete(us);
+	 		return "Logged Out!";
+	 	}else throw new LoginException("Error Occured Unable to log out !");
+		
+	 }
+
+}
+

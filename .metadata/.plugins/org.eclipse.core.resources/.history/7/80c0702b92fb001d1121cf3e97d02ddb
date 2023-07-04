@@ -1,0 +1,35 @@
+package com.chat.services;
+
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.chat.exceptions.ChannelException;
+import com.chat.models.Channel;
+import com.chat.models.Community;
+import com.chat.repositories.ChannelRepo;
+import com.chat.repositories.CommunityRepo;
+
+@Service
+public class CommunityServiceImpl implements CommuntiyService{
+
+	@Autowired
+	private CommunityRepo comRepo;
+	
+	@Autowired
+	private ChannelRepo chRepo;
+	
+	@Override
+	public Community createCommunity(Community community) {
+		return comRepo.save(community);
+	}
+	
+	@Override
+	public Set<Channel> getAllChannel(Integer id) throws ChannelException {
+
+		Community community =  comRepo.findById(id).orElseThrow(()-> new ChannelException("Community not found"));
+		return community.getChannels();
+	}
+
+}

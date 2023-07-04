@@ -1,0 +1,8 @@
+package com.chat.services;
+
+import com.chat.models.Message;
+
+public interface MessageService {
+
+	public String sendMessage(Message msg);
+}

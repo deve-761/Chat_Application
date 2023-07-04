@@ -1,0 +1,5 @@
+package com.chat.exceptions;
+
+public class GlobalExceptionHandler {
+
+}

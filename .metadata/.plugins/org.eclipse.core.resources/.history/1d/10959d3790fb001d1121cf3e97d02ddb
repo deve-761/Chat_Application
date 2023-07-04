@@ -1,0 +1,38 @@
+package com.chat.services;
+
+import java.nio.channels.Channel;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.chat.exceptions.UserException;
+import com.chat.models.User;
+import com.chat.repositories.ChannelRepo;
+import com.chat.repositories.UserRepo;
+
+@Service
+public class ChannelServiceImpl implements ChannelService{
+
+	@Autowired 
+	private ChannelRepo chRepo;
+	
+	@Autowired 
+	private UserRepo userRepo;
+	
+	@Override
+	public Channel createChannel(Channel channel) {
+		
+		return chRepo.save(channel);
+	}
+	
+	@Override
+	public String addUserToChannel(Integer id) throws UserException {
+		
+		User user = userRepo.findById(id).orElseThrow(() -> new UserException("user not found"));
+		
+		chRepo.set
+		
+		return "";
+	}
+
+}

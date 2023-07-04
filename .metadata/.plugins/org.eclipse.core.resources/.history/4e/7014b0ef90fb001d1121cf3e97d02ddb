@@ -1,0 +1,9 @@
+package com.chat.repositories;
+
+import java.nio.channels.Channel;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ChannelRepo extends JpaRepository<Channel, Integer>{
+
+}

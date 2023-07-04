@@ -1,0 +1,15 @@
+package com.chat.services;
+
+import java.util.List;
+
+import com.chat.exceptions.ChannelException;
+import com.chat.exceptions.UserException;
+import com.chat.models.Channel;
+import com.chat.models.User;
+
+public interface UserService {
+
+	public User createUser(User user);
+	public List<User> getAllUser() throws UserException;
+
+}

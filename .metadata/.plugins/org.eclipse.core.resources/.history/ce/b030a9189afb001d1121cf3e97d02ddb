@@ -1,0 +1,5 @@
+package com.chat.controllers;
+
+public class Controller {
+
+}

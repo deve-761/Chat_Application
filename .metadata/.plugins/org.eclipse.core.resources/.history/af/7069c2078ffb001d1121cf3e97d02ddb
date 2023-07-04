@@ -1,0 +1,10 @@
+package com.chat.services;
+
+import com.chat.models.Community;
+
+public interface CommuntiyService {
+
+	public Community createCommunity(Community community);
+	
+	
+}

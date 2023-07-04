@@ -1,0 +1,13 @@
+package com.chat.services;
+
+import java.nio.channels.Channel;
+
+import com.chat.exceptions.UserException;
+
+public interface ChannelService {
+
+	public Channel createChannel(Channel channel);
+
+	public String addUserToChannel(Integer id) throws UserException;
+	
+}

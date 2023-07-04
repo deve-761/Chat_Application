@@ -1,0 +1,63 @@
+package com.chat.models;
+
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Data
+@RequiredArgsConstructor
+@AllArgsConstructor
+@Entity
+public class Channel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @NotNull
+    private String name;
+
+    @ManyToOne
+    private Community community;
+
+    @ManyToMany
+    private Set<User> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
+    private Set<Message> messages = new HashSet<>();
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Channel other = (Channel) obj;
+		return Objects.equals(community, other.community) && Objects.equals(id, other.id)
+				&& Objects.equals(messages, other.messages) && Objects.equals(name, other.name)
+				&& Objects.equals(users, other.users);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(community, id, messages, name, users);
+	}
+    
+    
+}
+
